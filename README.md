@@ -218,7 +218,7 @@ Se este projeto te ajudou ou você gostou do trabalho, considere dar uma ⭐️ 
 
 <div align="center">
   
-**Desenvolvido com ☕ e 📚 por [Danielly Pedrini](https://github.com/danielly-pedrini)**
+**Desenvolvido por [Danielly Pedrini](https://github.com/danielly-pedrini)**
 <br>
 
 ⭐ Se este projeto foi útil, considere dar uma estrela no GitHub!
