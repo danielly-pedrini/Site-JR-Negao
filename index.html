@@ -1,21 +1,18 @@
+<!DOCTYPE html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <title>JR Negão - Serviços Profissionais</title>
+    <title>JR Negão</title>
   </head>
   <body>
-    <!-- Árvores decorativas -->
     <div class="tree-decoration tree-left"></div>
     <div class="tree-decoration tree-right"></div>
 
     <header>
       <h1>JR Negão</h1>
-      <p class="subtitle">Serviços Profissionais de Qualidade</p>
-      <button class="admin-btn" onclick="openAdminModal()">
-        🔐 Área Admin
-      </button>
+      <p class="subtitle">Excelência em Serviços para sua Casa e Empresa</p>
     </header>
 
     <div class="container">
@@ -23,40 +20,61 @@
         <div class="service-card">
           <h3>🏗️ Alvenaria</h3>
           <p>
-            Serviços completos de construção e reformas estruturais com
-            qualidade e segurança.
+            Construímos e reformamos com técnica profissional. Estruturas
+            sólidas, acabamentos de qualidade e cumprimento de prazos
+            garantidos.
           </p>
         </div>
         <div class="service-card">
           <h3>🏠 Pintura de Imóvel</h3>
           <p>
-            Pintura residencial e comercial com acabamento profissional e
-            materiais de primeira linha.
+            Transforme seus ambientes com cores e vida nova. Equipe
+            especializada, materiais de primeira qualidade e acabamento que
+            impressiona.
           </p>
         </div>
         <div class="service-card">
           <h3>🐛 Dedetização</h3>
-          <p>Controle de pragas eficiente e seguro para sua casa ou empresa.</p>
+          <p>
+            Elimine pragas com segurança e eficiência. Tratamentos profissionais
+            contra baratas, ratos, formigas, cupins, aracnídeos garantimos a
+            satisfação.
+          </p>
         </div>
         <div class="service-card">
           <h3>🌿 Limpeza de Terrenos</h3>
           <p>
-            Limpeza completa: roçada de grama, rastelo e manutenção de áreas
-            externas.
+            Limpeza completa de terrenos residenciais e comerciais. Roçada,
+            capina, remoção de entulhos e manutenção periódica de áreas externas
+            .
           </p>
         </div>
       </section>
     </div>
 
     <div class="carousel-section">
-      <h2>Nossos Trabalhos</h2>
-      <div class="carousel">
-        <div class="carousel-inner" id="carouselInner">
-          <div class="carousel-item">
-            <p class="no-images">
-              Adicione fotos através da Área Administrativa
-            </p>
+      <h2>Transformação dos Nossos Trabalhos</h2>
+      <div class="carousel-wrapper">
+        <!-- Carrossel ANTES -->
+        <div class="carousel-container">
+          <div class="carousel-label antes">📸 ANTES</div>
+          <div class="carousel">
+            <div class="carousel-inner" id="carouselAntes"></div>
+            <div class="carousel-controls">
+              <button class="carousel-btn" onclick="prevSlide()">←</button>
+              <button class="carousel-btn" onclick="nextSlide()">→</button>
+            </div>
           </div>
+          <div class="carousel-indicators" id="indicatorsAntes"></div>
+        </div>
+
+        <!-- Carrossel DEPOIS -->
+        <div class="carousel-container">
+          <div class="carousel-label depois">✨ DEPOIS</div>
+          <div class="carousel">
+            <div class="carousel-inner" id="carouselDepois"></div>
+          </div>
+          <div class="carousel-indicators" id="indicatorsDepois"></div>
         </div>
       </div>
     </div>
@@ -108,7 +126,13 @@
     </div>
 
     <footer>
-      <p>&copy; 2025 JR Negão - Todos os direitos reservados</p>
+      <p>
+        &copy; 2025
+        <a href="#" class="admin-link" onclick="openAdminModal(); return false;"
+          >JR Negão</a
+        >
+        - Todos os direitos reservados
+      </p>
       <p>Contato: (15) 99267-8046</p>
     </footer>
 
@@ -117,16 +141,13 @@
       target="_blank"
       class="whatsapp-float"
       title="Fale conosco no WhatsApp"
+      >💬</a
     >
-      💬
-    </a>
 
-    <!-- Modal Área Administrativa -->
     <div id="adminModal" class="modal">
       <div class="modal-content">
         <span class="close" onclick="closeAdminModal()">&times;</span>
 
-        <!-- Login -->
         <div id="loginSection" class="login-section">
           <div class="admin-header">
             <h2>🔐 Login Administrativo</h2>
@@ -148,36 +169,68 @@
           </p>
         </div>
 
-        <!-- Área Administrativa -->
         <div id="adminContent" class="admin-content">
           <div class="admin-header">
-            <h2>📸 Gerenciar Fotos do Carrossel</h2>
-            
+            <h2>📸 Gerenciar Fotos - Antes & Depois</h2>
+            <button class="logout-btn" onclick="logout()">Sair</button>
           </div>
 
-          <!-- Upload de Fotos -->
-          <div class="upload-section">
-            <h3>📤 Adicionar Novas Fotos</h3>
-            <div class="file-input-wrapper">
-              <label for="fileInput" class="file-input-label">
-                📁 Escolher Imagens
-              </label>
-              <input type="file" id="fileInput" accept="image/*" multiple />
+          <div class="admin-carousel-section">
+            <!-- Upload ANTES -->
+            <div class="upload-section">
+              <h3>📤 Adicionar Fotos ANTES</h3>
+              <div class="file-input-wrapper">
+                <label for="fileInputAntes" class="file-input-label"
+                  >📁 Escolher Imagens</label
+                >
+                <input
+                  type="file"
+                  id="fileInputAntes"
+                  class="file-input"
+                  accept="image/*"
+                  multiple
+                />
+              </div>
+              <div id="previewContainerAntes" class="preview-container"></div>
+              <button onclick="uploadImages('antes')" class="btn-upload">
+                ✓ Adicionar ao ANTES
+              </button>
+
+              <div class="gallery-section" style="margin-top: 2rem">
+                <h3>🖼️ Fotos ANTES</h3>
+                <div id="galleryAntes" class="gallery-grid"></div>
+              </div>
             </div>
-            <div id="previewContainer" class="preview-container"></div>
-            <button onclick="uploadImages()" class="btn-upload">
-              ✓ Adicionar ao Carrossel
-            </button>
-          </div>
 
-          <!-- Galeria -->
-          <div class="gallery-section">
-            <h3>🖼️ Fotos Atuais no Carrossel</h3>
-            <div id="galleryGrid" class="gallery-grid"></div>
+            <!-- Upload DEPOIS -->
+            <div class="upload-section">
+              <h3>📤 Adicionar Fotos DEPOIS</h3>
+              <div class="file-input-wrapper">
+                <label for="fileInputDepois" class="file-input-label"
+                  >📁 Escolher Imagens</label
+                >
+                <input
+                  type="file"
+                  id="fileInputDepois"
+                  class="file-input"
+                  accept="image/*"
+                  multiple
+                />
+              </div>
+              <div id="previewContainerDepois" class="preview-container"></div>
+              <button onclick="uploadImages('depois')" class="btn-upload">
+                ✓ Adicionar ao DEPOIS
+              </button>
+
+              <div class="gallery-section" style="margin-top: 2rem">
+                <h3>🖼️ Fotos DEPOIS</h3>
+                <div id="galleryDepois" class="gallery-grid"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <script src="./script.js"></script>
   </body>
-  <script src="./script.js"></script>
 </html>

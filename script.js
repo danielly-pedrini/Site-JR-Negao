@@ -1,23 +1,18 @@
-  // Criar folhas caindo
-        function createLeaves() {
+  function createLeaves() {
             const leavesCount = 20;
             for (let i = 0; i < leavesCount; i++) {
                 const leaf = document.createElement('div');
                 leaf.className = 'leaf leaf-fall';
                 
-                // Posição horizontal aleatória
                 const leftPosition = Math.random() * 100;
                 leaf.style.left = leftPosition + '%';
                 
-                // Duração da animação (8 a 15 segundos)
                 const duration = Math.random() * 7 + 8;
                 leaf.style.animationDuration = duration + 's';
                 
-                // Delay inicial aleatório
                 const delay = Math.random() * 8;
                 leaf.style.animationDelay = delay + 's';
                 
-                // Tamanho aleatório
                 const scale = Math.random() * 0.6 + 0.5;
                 leaf.style.width = (30 * scale) + 'px';
                 leaf.style.height = (30 * scale) + 'px';
@@ -26,51 +21,119 @@
             }
         }
 
-        // Variáveis globais
         let currentSlide = 0;
         let carouselInterval;
-        let images = [];
-        let pendingFiles = [];
+        let imagesAntes = [];
+        let imagesDepois = [];
+        let pendingFilesAntes = [];
+        let pendingFilesDepois = [];
         const ADMIN_PASSWORD = 'admin123';
 
-        // Inicializar ao carregar a página
+        // 2 imagens fixas de exemplo para ANTES e DEPOIS
+        const defaultImagesAntes = [
+            'https://via.placeholder.com/800x400/8b0000/ffffff?text=ANTES+-+Trabalho+1',
+            'https://via.placeholder.com/800x400/8b0000/ffffff?text=ANTES+-+Trabalho+2',
+            'https://via.placeholder.com/800x400/8b0000/ffffff?text=ANTES+-+Trabalho+3'
+        ];
+
+        const defaultImagesDepois = [
+            'https://via.placeholder.com/800x400/228b22/ffffff?text=DEPOIS+-+Trabalho+1',
+            'https://via.placeholder.com/800x400/228b22/ffffff?text=DEPOIS+-+Trabalho+2',
+            'https://via.placeholder.com/800x400/228b22/ffffff?text=DEPOIS+-+Trabalho+3'
+        ];
+
         window.onload = function() {
             createLeaves();
-            loadImages();
+            imagesAntes = [...defaultImagesAntes];
+            imagesDepois = [...defaultImagesDepois];
+            renderCarousels();
             startCarousel();
         };
 
-        // Carrossel
         function startCarousel() {
             clearInterval(carouselInterval);
             carouselInterval = setInterval(nextSlide, 4000);
         }
 
         function nextSlide() {
-            if (images.length === 0) return;
-            currentSlide = (currentSlide + 1) % images.length;
-            updateCarousel();
+            const maxSlides = Math.max(imagesAntes.length, imagesDepois.length);
+            if (maxSlides === 0) return;
+            currentSlide = (currentSlide + 1) % maxSlides;
+            updateCarousels();
         }
 
-        function updateCarousel() {
-            const carouselInner = document.getElementById('carouselInner');
-            carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+        function prevSlide() {
+            const maxSlides = Math.max(imagesAntes.length, imagesDepois.length);
+            if (maxSlides === 0) return;
+            currentSlide = (currentSlide - 1 + maxSlides) % maxSlides;
+            updateCarousels();
         }
 
-        function renderCarousel() {
-            const carouselInner = document.getElementById('carouselInner');
-            if (images.length === 0) {
-                carouselInner.innerHTML = '<div class="carousel-item"><p class="no-images">Adicione fotos através da Área Administrativa</p></div>';
+        function updateCarousels() {
+            const carouselAntes = document.getElementById('carouselAntes');
+            const carouselDepois = document.getElementById('carouselDepois');
+            
+            carouselAntes.style.transform = `translateX(-${currentSlide * 100}%)`;
+            carouselDepois.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            updateIndicators();
+        }
+
+        function updateIndicators() {
+            const maxSlides = Math.max(imagesAntes.length, imagesDepois.length);
+            
+            // Atualizar indicadores ANTES
+            const indicatorsAntes = document.getElementById('indicatorsAntes');
+            indicatorsAntes.innerHTML = '';
+            for (let i = 0; i < maxSlides; i++) {
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator' + (i === currentSlide ? ' active' : '');
+                indicator.onclick = () => goToSlide(i);
+                indicatorsAntes.appendChild(indicator);
+            }
+            
+            // Atualizar indicadores DEPOIS
+            const indicatorsDepois = document.getElementById('indicatorsDepois');
+            indicatorsDepois.innerHTML = '';
+            for (let i = 0; i < maxSlides; i++) {
+                const indicator = document.createElement('div');
+                indicator.className = 'indicator' + (i === currentSlide ? ' active' : '');
+                indicator.onclick = () => goToSlide(i);
+                indicatorsDepois.appendChild(indicator);
+            }
+        }
+
+        function goToSlide(index) {
+            currentSlide = index;
+            updateCarousels();
+        }
+
+        function renderCarousels() {
+            const carouselAntes = document.getElementById('carouselAntes');
+            const carouselDepois = document.getElementById('carouselDepois');
+            
+            // Renderizar ANTES
+            if (imagesAntes.length === 0) {
+                carouselAntes.innerHTML = '<div class="carousel-item"><p class="no-images">Nenhuma foto adicionada</p></div>';
             } else {
-                carouselInner.innerHTML = images.map(img => 
-                    `<div class="carousel-item"><img src="${img}" alt="Trabalho realizado"></div>`
+                carouselAntes.innerHTML = imagesAntes.map(img => 
+                    `<div class="carousel-item"><img src="${img}" alt="Antes"></div>`
                 ).join('');
             }
+            
+            // Renderizar DEPOIS
+            if (imagesDepois.length === 0) {
+                carouselDepois.innerHTML = '<div class="carousel-item"><p class="no-images">Nenhuma foto adicionada</p></div>';
+            } else {
+                carouselDepois.innerHTML = imagesDepois.map(img => 
+                    `<div class="carousel-item"><img src="${img}" alt="Depois"></div>`
+                ).join('');
+            }
+            
             currentSlide = 0;
-            updateCarousel();
+            updateCarousels();
         }
 
-        // Área Administrativa - Modal
         function openAdminModal() {
             document.getElementById('adminModal').style.display = 'block';
         }
@@ -79,14 +142,13 @@
             document.getElementById('adminModal').style.display = 'none';
         }
 
-        // Login
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const password = document.getElementById('adminPassword').value;
             if (password === ADMIN_PASSWORD) {
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
-                renderGallery();
+                renderGalleries();
             } else {
                 alert('Senha incorreta!');
             }
@@ -98,23 +160,32 @@
             document.getElementById('adminPassword').value = '';
         }
 
-        // Upload de imagens
-        document.getElementById('fileInput').addEventListener('change', function(e) {
-            pendingFiles = Array.from(e.target.files);
-            showPreview();
+        // Upload ANTES
+        document.getElementById('fileInputAntes').addEventListener('change', function(e) {
+            pendingFilesAntes = Array.from(e.target.files);
+            showPreview('antes');
         });
 
-        function showPreview() {
-            const container = document.getElementById('previewContainer');
+        // Upload DEPOIS
+        document.getElementById('fileInputDepois').addEventListener('change', function(e) {
+            pendingFilesDepois = Array.from(e.target.files);
+            showPreview('depois');
+        });
+
+        function showPreview(tipo) {
+            const files = tipo === 'antes' ? pendingFilesAntes : pendingFilesDepois;
+            const containerId = tipo === 'antes' ? 'previewContainerAntes' : 'previewContainerDepois';
+            const container = document.getElementById(containerId);
+            
             container.innerHTML = '';
-            pendingFiles.forEach((file, index) => {
+            files.forEach((file, index) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const div = document.createElement('div');
                     div.className = 'preview-item';
                     div.innerHTML = `
                         <img src="${e.target.result}" alt="Preview">
-                        <button class="remove-preview" onclick="removePreview(${index})">×</button>
+                        <button class="remove-preview" onclick="removePreview('${tipo}', ${index})">×</button>
                     `;
                     container.appendChild(div);
                 };
@@ -122,72 +193,84 @@
             });
         }
 
-        function removePreview(index) {
-            pendingFiles.splice(index, 1);
-            showPreview();
+        function removePreview(tipo, index) {
+            if (tipo === 'antes') {
+                pendingFilesAntes.splice(index, 1);
+                showPreview('antes');
+            } else {
+                pendingFilesDepois.splice(index, 1);
+                showPreview('depois');
+            }
         }
 
-        function uploadImages() {
-            if (pendingFiles.length === 0) {
+        function uploadImages(tipo) {
+            const files = tipo === 'antes' ? pendingFilesAntes : pendingFilesDepois;
+            const images = tipo === 'antes' ? imagesAntes : imagesDepois;
+            
+            if (files.length === 0) {
                 alert('Selecione pelo menos uma imagem!');
                 return;
             }
 
-            pendingFiles.forEach(file => {
+            files.forEach(file => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     images.push(e.target.result);
-                    saveImages();
-                    renderCarousel();
-                    renderGallery();
+                    renderCarousels();
+                    renderGalleries();
                 };
                 reader.readAsDataURL(file);
             });
 
-            pendingFiles = [];
-            document.getElementById('previewContainer').innerHTML = '';
-            document.getElementById('fileInput').value = '';
+            if (tipo === 'antes') {
+                pendingFilesAntes = [];
+                document.getElementById('previewContainerAntes').innerHTML = '';
+                document.getElementById('fileInputAntes').value = '';
+            } else {
+                pendingFilesDepois = [];
+                document.getElementById('previewContainerDepois').innerHTML = '';
+                document.getElementById('fileInputDepois').value = '';
+            }
+            
             alert('Imagens adicionadas com sucesso!');
         }
 
-        // Galeria administrativa
-        function renderGallery() {
-            const gallery = document.getElementById('galleryGrid');
+        function renderGalleries() {
+            renderGallery('antes');
+            renderGallery('depois');
+        }
+
+        function renderGallery(tipo) {
+            const images = tipo === 'antes' ? imagesAntes : imagesDepois;
+            const galleryId = tipo === 'antes' ? 'galleryAntes' : 'galleryDepois';
+            const gallery = document.getElementById(galleryId);
+            
             if (images.length === 0) {
-                gallery.innerHTML = '<div class="empty-gallery"><p>Nenhuma foto adicionada ainda.</p><p>Use o formulário acima para adicionar fotos.</p></div>';
+                gallery.innerHTML = '<div class="empty-gallery"><p>Nenhuma foto adicionada ainda.</p></div>';
             } else {
                 gallery.innerHTML = images.map((img, index) => `
                     <div class="gallery-item">
-                        <img src="${img}" alt="Foto ${index + 1}">
+                        <img src="${img}" alt="${tipo} ${index + 1}">
                         <div class="gallery-item-actions">
-                            <button class="btn-delete" onclick="deleteImage(${index})">🗑️ Remover</button>
+                            <button class="btn-delete" onclick="deleteImage('${tipo}', ${index})">🗑️ Remover</button>
                         </div>
                     </div>
                 `).join('');
             }
         }
 
-        function deleteImage(index) {
+        function deleteImage(tipo, index) {
             if (confirm('Tem certeza que deseja remover esta imagem?')) {
-                images.splice(index, 1);
-                saveImages();
-                renderCarousel();
-                renderGallery();
+                if (tipo === 'antes') {
+                    imagesAntes.splice(index, 1);
+                } else {
+                    imagesDepois.splice(index, 1);
+                }
+                renderCarousels();
+                renderGalleries();
             }
         }
 
-        // Armazenamento (usando variável em memória - as imagens serão perdidas ao recarregar a página)
-        function saveImages() {
-            // Em uma aplicação real, você salvaria no servidor
-            // Aqui estamos apenas mantendo em memória
-        }
-
-        function loadImages() {
-            // Imagens de exemplo (você pode remover isso)
-            renderCarousel();
-        }
-
-        // Formulário de orçamento
         document.getElementById('orcamentoForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -206,7 +289,6 @@
             window.open(whatsappURL, '_blank');
         });
 
-        // Fechar modal ao clicar fora
         window.onclick = function(event) {
             const modal = document.getElementById('adminModal');
             if (event.target == modal) {
