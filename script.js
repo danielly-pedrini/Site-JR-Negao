@@ -31,15 +31,13 @@
 
         // 2 imagens fixas de exemplo para ANTES e DEPOIS
         const defaultImagesAntes = [
-            'https://via.placeholder.com/800x400/8b0000/ffffff?text=ANTES+-+Trabalho+1',
-            'https://via.placeholder.com/800x400/8b0000/ffffff?text=ANTES+-+Trabalho+2',
-            'https://via.placeholder.com/800x400/8b0000/ffffff?text=ANTES+-+Trabalho+3'
+            'https://github.com/danielly-pedrini/JR-Negao/blob/master/assets/img%20antes%201.jpeg?raw=true',
+            'https://github.com/danielly-pedrini/JR-Negao/blob/master/assets/img%20antes%202.jpeg?raw=true',
         ];
 
         const defaultImagesDepois = [
-            'https://via.placeholder.com/800x400/228b22/ffffff?text=DEPOIS+-+Trabalho+1',
-            'https://via.placeholder.com/800x400/228b22/ffffff?text=DEPOIS+-+Trabalho+2',
-            'https://via.placeholder.com/800x400/228b22/ffffff?text=DEPOIS+-+Trabalho+3'
+            'https://github.com/danielly-pedrini/JR-Negao/blob/master/assets/img%20depois%201.jpeg?raw=true',
+            'https://github.com/danielly-pedrini/JR-Negao/blob/master/assets/img%20depois%202.jpeg?raw=true',
         ];
 
         window.onload = function() {
